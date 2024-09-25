@@ -11,6 +11,15 @@ Noms et matricules : Nom1 (Matricule1), Nom2 (Matricule2)
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
+import csv
+import os
+
+with open(r'collection_bibliotheque.csv', newline='') as csvfile:
+    biblio = csv.reader(csvfile, delimiter= ",", quotechar='|')
+    for row in biblio:
+
+        print(row)
+
 
 
 
