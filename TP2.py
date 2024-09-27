@@ -13,17 +13,16 @@ Noms et matricules : Nom1 (Matricule1), Nom2 (Matricule2)
 # TODO : Écrire votre code ici
 import csv
 
-
 dict_bibli={}
 with open("collection_bibliotheque.csv", newline='') as csvfile:
-    biblio = csv.reader(csvfile, delimiter= ",") # cr/e une liste d/limit/ par , dans une ligne
+    biblio = csv.reader(csvfile, delimiter= ",") # crée une liste délimité par , dans une ligne
     for row in biblio:
-        key= (row[-1]) #ajoute dernier element de la ligne
-        livre=(tuple(row[0:-1])) 
-        dict_bibli.update({key:livre})
+        key= (row[-1]) #ajoute dernier élement de la ligne
+        livre=(tuple(row[0:-1]))
+        if  len(key) == 4: 
+            dict_bibli.update({key:livre})
         
 
-print(dict_bibli)
 
         
 
