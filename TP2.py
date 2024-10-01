@@ -15,17 +15,15 @@ import csv
 
 dictionnaire_bibli={}
 
-dict_bibli={}
+
 with open("collection_bibliotheque.csv", newline='') as csvfile:
     biblio = csv.reader(csvfile, delimiter= ",") # crée une liste délimité par , dans une ligne
     for row in biblio:
-        key= (row[-1]) #ajoute dernier element de la ligne
-        livre=(tuple(row[0:-1])) 
-        dictionnaire_bibli.update({key:livre})
         key= (row[-1]) #ajoute dernier élement de la ligne
         livre=(tuple(row[0:-1]))
-        if  len(key) == 4: 
-            dict_bibli.update({key:livre})
+        if  len(key) == 4:
+            print(key)
+            dictionnaire_bibli.update({key:livre})
         
 print( f' La collection de la bibliotheque contient ces livres: \n {dictionnaire_bibli}')       
 
@@ -40,18 +38,22 @@ with open("nouvelle_collection.csv", newline='') as csvfile:
     ajout_biblio = csv.reader(csvfile, delimiter= ",") # cr/e une liste d/limit/ par , dans une ligne
     for ajout_row in ajout_biblio:
         ajout_key= (ajout_row[-1]) #ajoute dernier element de la ligne
-        ajout_livre=(tuple(ajout_row[0:-1])) 
-        Ajout_dictionnaire_bibli.update({ajout_key: ajout_livre})
+        ajout_livre=(tuple(ajout_row[0:-1]))
+        if len(ajout_key) == 4: 
+            if ajout_key not in dictionnaire_bibli:
+            # Ajout_dictionnaire_bibli.update({ajout_key: ajout_livre})
+                dictionnaire_bibli.update({ajout_key: ajout_livre})
+                print (f'le livre {ajout_key} --- {ajout_livre[0]} par {ajout_livre[1]} --- a ete ajoute avec succes')
+            else:
+                print (f'Le livre {ajout_key} --- {ajout_livre[0]} par {ajout_livre[1]} --- est deja present dans la bibliotheque ')
 
- 
+# for ajout_livre, ajout_key in Ajout_dictionnaire_bibli.items():
+#     if ajout_key not in dictionnaire_bibli:
+#         dictionnaire_bibli[ajout_key] = ajout_livre
 
-for ajout_livre, ajout_key in Ajout_dictionnaire_bibli.items():
-    if ajout_key not in dictionnaire_bibli:
-        dictionnaire_bibli[ajout_key] = ajout_livre
-
-        print (f'le livre {ajout_livre} --- {ajout_key[0]} par {ajout_key[1]} --- a ete ajoute avec succes')
-    else:
-        print (f'Le livre {ajout_livre} --- {ajout_key[0]} par {ajout_key[1]} --- est deja present dans la bibliotheque ')
+#         print (f'le livre {ajout_livre} --- {ajout_key[0]} par {ajout_key[1]} --- a ete ajoute avec succes')
+#     else:
+#         print (f'Le livre {ajout_livre} --- {ajout_key[0]} par {ajout_key[1]} --- est deja present dans la bibliotheque ')
 
 print (f'Dictionnaire mise a jour\nNouvelle bibliotheque:\n{dictionnaire_bibli}\n')
 
@@ -77,6 +79,33 @@ print(f'\nBibliothèque avec modifications de cote : {dictionnaire_bibli}\n')
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
+dict_emprunt={}
+
+with open("emprunts.csv", newline='') as csvfile:
+    livre_emprunter = csv.reader(csvfile, delimiter= ",") # crée une liste délimité par , dans une ligne
+    for row in livre_emprunter:
+        key = row[0]
+        date = row[-1]
+        dict_emprunt.update ({key: row[-1]})
+print(dict_emprunt)
+for element in dictionnaire_bibli:
+    print("ceci, est lelemet, ",element)
+    if element in dict_emprunt:
+        temp = dictionnaire_bibli.get(element)
+        temp = temp + ("emprunté", dict_emprunt.get(element))
+        dictionnaire_bibli.update({element:temp})
+    if element not in dict_emprunt:
+        temp = dictionnaire_bibli.get(element)
+        temp = temp + ("disponible",)
+        dictionnaire_bibli.update({element:temp})
+
+ 
+    
+          
+
+
+print(f' \n Bibliotheque avec ajout des emprunts : {dictionnaire_bibli} \n')
+
 
 
 
@@ -90,8 +119,33 @@ print(f'\nBibliothèque avec modifications de cote : {dictionnaire_bibli}\n')
 
 # TODO : Écrire votre code ici
 
+import datetime
 
+for element in dictionnaire_bibli:
+    donnee_livre= dictionnaire_bibli.get(element)
+    if donnee_livre[-2] == "emprunté":
+        date = donnee_livre[-1].split("-")
+        year, month, day = date
+        date_emprunt = datetime.date(int(year), int(month), int(day))
+        
+        date_remise = date_emprunt + datetime.timedelta(days=30) 
+        date_livre_perdu= date_emprunt + datetime.timedelta(days = 365)
+        
+        today= datetime.date.today()
+        if today >= date_livre_perdu:
+            print("ce livre a ete perdu", date_livre_perdu)
+            temp = dictionnaire_bibli.get(element)
+            temp = temp + ("livre est perdu",)
+            dictionnaire_bibli.update({element:temp})
+            print(temp)
+        elif today > date_remise:
+            retard = today- date_remise 
+            frais_retard= retard.days *2 if 50 > retard.days  else 100 
+            print(date_remise, retard.days, frais_retard,"$", today)
+            temp = dictionnaire_bibli.get(element)
+            temp = temp + (str(frais_retard)+"$",)
+            dictionnaire_bibli.update({element:temp})
+            print(f"le livre {element} --- {temp[0]} par {temp[1]} --- a {temp[-1]} de frais de retard")
+        
 
-
-
-
+#print(f' \n Bibliotheque avec ajout des retards et frais : {dictionnaire_bibli} \n')
