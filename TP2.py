@@ -2,8 +2,8 @@
 TP2 : Système de gestion de livres pour une bibliothèque
 
 Groupe de laboratoire : L01
-Numéro d'équipe : YY
-Noms et matricules : Mikkelsen Bazelais(2372411), Nom2 (Matricule2)
+Numéro d'équipe : 14
+Noms et matricules : Mikkelsen Bazelais(2372411), Hasan-Huseyin Otken (2299375)
 """
 
 ########################################################################################################## 
